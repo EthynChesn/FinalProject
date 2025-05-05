@@ -42,8 +42,11 @@ class VideoPlayer:
         self.player.pause()
         
 
-    def open_file(self):
-        self.filename = filedialog.askopenfilename(title='Select a Video File',filetypes=[('Video Files',"*.mp4;*.avi;*.mkv;*.mov"),('All Files','*.*')])
+    def open_file(self,fileName=None):
+        if fileName is None:
+            self.filename = filedialog.askopenfilename(title='Select a Video File',filetypes=[('Video Files',"*.mp4;*.avi;*.mkv;*.mov"),('All Files','*.*')])
+        else:
+            self.filename = fileName
         if self.filename:
             media = self.instance.media_new(self.filename)
             self.player.set_media(media)
@@ -53,7 +56,7 @@ if __name__ == '__main__':
     root = tk.Tk()
     root.state('zoomed')
     player = VideoPlayer(root)
-    player.open_file()
+    player.open_file('E:\\testvideo.mp4')
     player.play_video()
     root.mainloop()
 
