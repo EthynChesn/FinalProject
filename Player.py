@@ -1,5 +1,4 @@
-import tkinter as tk
-from tkinter import filedialog
+import tkinter as tk; from tkinter import filedialog;import tkinter.font
 import vlc
 import sys
 
@@ -16,26 +15,32 @@ class VideoPlayer:
 
         self.controls = tk.Frame(root)
         self.controls.pack(fill=tk.X,padx = 10, pady = 5)
-        self.isPlaying = False
 
         #self.play_button = tk.Button(self.controls,text='Play',command=self.play_video)
-        #self.play_button.pack(side=tk.LEFT,padx=5)
-        self.pause_button = tk.Button(self.controls,text='Pause',command=self.pause_video)
+        #self.play_button.pack(side=tk.LEFT,padx=5)\
+        
+        self.pause_button = tk.Button(self.controls,text='   | |   ',command=self.pause_video)
+        self.pause_button.config(font=('Helvetica',10,'bold'))
         self.pause_button.pack(side=tk.LEFT,padx=5)
     
     def set_video_panel(self):
-        self.player.set_hwnd(self.video_panel.winfo_id())
+        if sys.platform.startswith("linux"):
+            self.player.set_xwindow(self.video_panel.winfo_id())
+        elif sys.platform == "win32":
+            self.player.set_hwnd(self.video_panel.winfo_id())
+        elif sys.platform == "darwin":
+            self.player.set_nsobject(self.video_panel.winfo_id())
 
     def play_video(self):
-        self.isPlaying = True
         self.player.play()
     
     def pause_video(self):
-        self.player.pause()
-        if self.isPlaying:
-            self.pause_button.config(text = 'Play')
+        if self.player.is_playing():
+            self.pause_button.config(text='   \u25B6   ')
         else:
-            self.pause_button.config(text = 'Pause')
+            self.pause_button.config(text='   | |   ')
+        self.player.pause()
+        
 
     def open_file(self):
         self.filename = filedialog.askopenfilename(title='Select a Video File',filetypes=[('Video Files',"*.mp4;*.avi;*.mkv;*.mov"),('All Files','*.*')])
